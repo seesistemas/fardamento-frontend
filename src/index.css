@@ -1,0 +1,176 @@
+/**
+ * @file Folha de estilos global e tema do Tailwind CSS v4.
+ *
+ * Organização:
+ * 1. `@font-face`  — fontes Geist e Geist Mono (subconjunto latino, locais).
+ * 2. `@theme`      — escala de design (espaçamento, tipografia, raios, cores).
+ * 3. `@layer base` — tokens de cor do tema padrão (`.pg`) e do alto
+ *                    contraste (`.pg.hc`), além do anel de foco.
+ * 4. `@layer components` — links de atalho de teclado (`.skip`).
+ *
+ * Decisões que garantem fidelidade ao protótipo HTML:
+ * - Espaçamentos em `px` (`--spacing: 4px`): no protótipo, paddings e gaps
+ *   NÃO crescem quando o usuário aumenta o texto; só a tipografia cresce.
+ * - Tamanhos de fonte em `em`: são relativos ao `font-size` definido no
+ *   elemento raiz da página (controlado pelos botões A− / A / A+).
+ */
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------- Fontes */
+
+/* Geist é uma fonte variável: um único arquivo cobre os pesos 400–800. */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('./assets/fonts/geist-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('./assets/fonts/geist-mono-latin.woff2') format('woff2');
+}
+
+/* ------------------------------------------------------------------ Tema */
+
+@theme {
+  /* Unidade base em px: `p-6` = 24px, `gap-3.5` = 14px, `py-20` = 80px. */
+  --spacing: 4px;
+
+  --font-sans: Geist, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', monospace;
+
+  /* Escala tipográfica em `em` (substitui a escala padrão em `rem`). */
+  --text-*: initial;
+  --text-xs: 0.75em; /* 12px */
+  --text-13: 0.8125em; /* 13px */
+  --text-sm: 0.875em; /* 14px */
+  --text-15: 0.9375em; /* 15px */
+  --text-base: 1em; /* 16px */
+  --text-lg: 1.125em; /* 18px */
+  --text-2xl: 1.5em; /* 24px */
+  --text-4xl: 2.25em; /* 36px */
+  --text-5xl: 3em; /* 48px */
+
+  /* Raios de borda em px. */
+  --radius-*: initial;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
+
+  /* Cores fixas (não mudam no alto contraste). */
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-acre: #048d3e; /* verde institucional */
+  --color-gold: #ffcc2c; /* amarelo institucional */
+
+  /* Sombra do cartão "O programa em resumo". */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.06), 0 12px 32px rgba(3, 107, 47, 0.1);
+}
+
+/*
+ * Cores semânticas: apontam para as variáveis CSS declaradas em `.pg`,
+ * então mudam sozinhas quando a classe `.hc` (alto contraste) é aplicada.
+ * Uso: `bg-background`, `text-muted-foreground`, `border-border`, etc.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-topbar-foreground: var(--topbar-foreground);
+}
+
+/* ------------------------------------------------------------------ Base */
+
+@layer base {
+  body {
+    margin: 0;
+    background: #ffffff;
+  }
+
+  /* Tema padrão — aplicado no elemento raiz da página. */
+  .pg {
+    --background: #ffffff;
+    --foreground: oklch(0.145 0 0);
+    --card: #ffffff;
+    --card-foreground: oklch(0.145 0 0);
+    --primary: #036b2f;
+    --primary-foreground: #ffffff;
+    --brand: #048d3e;
+    --brand-soft: #e9f5ee;
+    --highlight: #ffcc2c;
+    --highlight-foreground: #1f1a05;
+    --muted: oklch(0.97 0 0);
+    --muted-foreground: oklch(0.44 0 0);
+    --accent: oklch(0.97 0 0);
+    --border: oklch(0.922 0 0);
+    --ring: #048d3e;
+    --topbar-foreground: #ffffff;
+  }
+
+  /* Tema de alto contraste — preto, branco e amarelo. */
+  .pg.hc {
+    --background: #000000;
+    --foreground: #ffffff;
+    --card: #000000;
+    --card-foreground: #ffffff;
+    --primary: #ffcc2c;
+    --primary-foreground: #000000;
+    --brand: #ffcc2c;
+    --brand-soft: #000000;
+    --highlight: #ffcc2c;
+    --highlight-foreground: #000000;
+    --muted: #000000;
+    --muted-foreground: #ffffff;
+    --accent: #222222;
+    --border: #ffffff;
+    --ring: #ffcc2c;
+    --topbar-foreground: #ffffff;
+  }
+
+  /* Anel de foco visível para navegação por teclado. */
+  .pg *:focus-visible {
+    outline: 3px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+/* ------------------------------------------------------------ Componentes */
+
+@layer components {
+  /* Link de atalho: fica fora da tela até receber foco via Tab. */
+  .skip {
+    position: absolute;
+    left: -9999px;
+    top: 8px;
+    z-index: 10;
+    background: #ffcc2c;
+    color: #1f1a05;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  .skip:focus {
+    left: 16px;
+  }
+}
